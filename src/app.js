@@ -24,6 +24,9 @@ app.post('/students', (req, res) => {
     if (students.some((s)=> s.fullName === fullName)){
         return res.status(400).json({ message: 'El nombre de estudiante ya existe' });
     }
+    if(age <6  || age> 100 ){
+        return res.status(400).json({ message: 'ingrese una edad valida' });
+    }
 
     const newStudent = { 
         id: id, fullName: fullName, age:+age, curse: curse};
@@ -32,16 +35,25 @@ app.post('/students', (req, res) => {
 });
 
 app.put('/students/:id', (req, res) => {
-    const student = students.find((s) => s.id === parseInt(req.params.id));
-    if (!student) return res.status(404).json({ message: 'no se encontro el estudiante' });
-
-    const { fullName, age, curse } = req.body;
-    if (fullName) student.fullName = fullName;
-    if (age) student.age =+age;
-    if (curse) student.curse = curse;
-
-    res.json({msg:" se actualizo correctamente el usuario"});
+    const id = parseInt(req.params.id);
+    const { fullName, age, curse}= req.body;
+    const actualizar = students.find((s)=> s.id === id );
+    if (!actualizar){
+        return res.status(404).json({ message: 'no se encontro el estudiante' });
+    }
+    if(age <6  || age> 60 ){
+        return res.status(400).json({ message: 'ingrese una edad valida' });
+    }
+    if (!fullName.trim() || !age || !curse.trim())
+        { return res.status(400).json({ message: 'No puede actualizar los valores vacios' })
+}else{
+        actualizar.fullName = fullName || actualizar.fullName;
+        actualizar.age = +age || actualizar.age;
+        actualizar.curse = curse || actualizar.curse;
+        res.json({msg:"alumno actualizado correctamente"});
+    }
 });
+
 
 app.delete('/students/:id', (req, res) => {
     const index = students.findIndex((s) => s.id === parseInt(req.params.id));
