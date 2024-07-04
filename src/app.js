@@ -24,7 +24,7 @@ app.post('/students', (req, res) => {
     if (students.some((s)=> s.fullName === fullName)){
         return res.status(400).json({ message: 'El nombre de estudiante ya existe' });
     }
-    if(age <6  || age> 100 ){
+    if(age <6  || age> 60 ){
         return res.status(400).json({ message: 'ingrese una edad valida' });
     }
 
